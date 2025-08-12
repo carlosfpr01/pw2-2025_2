@@ -9,28 +9,23 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-@Path("/hello")
+@Path("/Conversion")
 public class Start {
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String hello() {
-        return "Hello from Quarkus REST";
-    }
-
-    @GET
-    @Path("/name/{name}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String helloName(@PathParam("name") String name) {
-        return "Hello " + name + " from Quarkus REST";
-    }
-
     @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String helloPost(@FormParam("km") String km) {
+    @Path("/km-to-miles/")
+    @Consumes("application/x-www-form-urlencoded")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String postKmToMiles(@FormParam("km") String km) {
         Double miles = Double.parseDouble(km) * 0.621371;
-        return Double.toString(miles) + " miles";
+        return String.format("%.5f", miles);
+    }
+
+    @GET
+    @Path("/knots-to-km/{knots}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Float convertKnotsToKm(@PathParam("knots") Float knots) {
+        return (knots * 1.852f);
     }
 
 }
