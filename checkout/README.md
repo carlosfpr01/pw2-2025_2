@@ -1,4 +1,4 @@
-# manager
+# checkout
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
@@ -49,22 +49,15 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 ./mvnw package -Dnative -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./target/manager-1.0.0-SNAPSHOT-runner`
+You can then execute your native executable with: `./target/checkout-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
 
 ## Related Guides
 
-- REST Client ([guide](https://quarkus.io/guides/rest-client)): Call REST services
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
+- SmallRye JWT ([guide](https://quarkus.io/guides/security-jwt)): Secure your applications with JSON Web Token
 
 ## Provided Code
-
-### REST Client
-
-Invoke different services through REST with JSON
-
-[Related guide section...](https://quarkus.io/guides/rest-client)
 
 ### REST
 

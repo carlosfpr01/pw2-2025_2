@@ -9,5 +9,19 @@
         "openapi",
         "quarkus",
         "smallrye"
-    ]
+    ],
+    "background.fullscreen": {
+        "useFront": false,
+        "style": {
+            "background-position": "center",
+            "background-size": "100%",
+            "opacity": 1
+        },
+        "images": [
+           "https://cdnb.artstation.com/p/assets/images/images/042/665/861/large/chengwei-pan-5.jpg?1635145384"
+        ],
+        "interval": 0,
+        "random": false
+    },
+    "editor.colorDecoratorsLimit": 500
 }
