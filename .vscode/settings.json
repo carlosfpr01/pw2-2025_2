@@ -23,5 +23,13 @@
         "interval": 0,
         "random": false
     },
-    "editor.colorDecoratorsLimit": 500
+    "editor.colorDecoratorsLimit": 500,
+    "microprofile.tools.validation.unknown.excluded": [
+        "*/mp-rest/providers/*/priority",
+        "mp.openapi.schema.*",
+        "kafka-streams.*",
+        "camel.*",
+        "smallrye.jwt.sign.key.location",
+        "quarkus.swagger-ui.always-include"
+    ]
 }
