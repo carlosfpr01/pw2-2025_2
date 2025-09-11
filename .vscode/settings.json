@@ -10,6 +10,7 @@
         "quarkus",
         "smallrye"
     ],
+    "background.enabled": true,
     "background.fullscreen": {
         "useFront": false,
         "style": {
@@ -18,7 +19,7 @@
             "opacity": 1
         },
         "images": [
-           "https://cdnb.artstation.com/p/assets/images/images/042/665/861/large/chengwei-pan-5.jpg?1635145384"
+           "https://i.redd.it/0k6meqvps4h91.gif"
         ],
         "interval": 0,
         "random": false
