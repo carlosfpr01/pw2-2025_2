@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Start.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">logistics</a> &gt; <a href="index.source.html" class="el_package">edu.ifrs</a> &gt; <span class="el_source">Start.java</span></div><h1>Start.java</h1><pre class="source lang-java linenums">/**
+ * VVS by Rodrigo Prestes Machado
+ *
+ * VVS is licensed under a
+ * Creative Commons Attribution 4.0 International License.
+ * You should have received a copy of the license along with this
+ * work. If not, see &lt;http://creativecommons.org/licenses/by/4.0/&gt;.
+*/
+package edu.ifrs;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.ifrs.business.Load;
+import edu.ifrs.business.Vehicle;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+@Path(&quot;/logistics&quot;)
+public class Start {
+
+    /** List of vehicles. */
+<span class="nc" id="L26">    private List&lt;Vehicle&gt; vehicles = new ArrayList();</span>
+
+    /**
+     * Inicializes the application with some vehicles and loads.
+     */
+<span class="nc" id="L31">    public Start() {</span>
+<span class="nc" id="L32">        Vehicle vehicle1 = new Vehicle(200);</span>
+<span class="nc" id="L33">        Load load1 = new Load(50);</span>
+<span class="nc" id="L34">        Load load2 = new Load(50);</span>
+<span class="nc" id="L35">        vehicle1.addWeight(load1);</span>
+<span class="nc" id="L36">        vehicle1.addWeight(load2);</span>
+<span class="nc" id="L37">        this.vehicles.add(vehicle1);</span>
+
+<span class="nc" id="L39">        Vehicle vehicle2 = new Vehicle(400);</span>
+<span class="nc" id="L40">        Load load3 = new Load(150);</span>
+<span class="nc" id="L41">        Load load4 = new Load(200);</span>
+<span class="nc" id="L42">        vehicle2.addWeight(load3);</span>
+<span class="nc" id="L43">        vehicle2.addWeight(load4);</span>
+<span class="nc" id="L44">        this.vehicles.add(vehicle2);</span>
+<span class="nc" id="L45">    }</span>
+
+    /**
+     * Gets a vehicle.
+     * @param index index of the vehicle
+     * @return the vehicle
+     */
+    @GET
+    @Path(&quot;/getVehicle/{index}&quot;)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Vehicle getVehicle(@PathParam(&quot;index&quot;) int index) {
+<span class="nc" id="L56">        return this.vehicles.get(index);</span>
+    }
+
+    /**
+     * Gets a list of vehicles.
+     *
+     * @return the list of vehicles
+     */
+    @GET
+    @Path(&quot;/getVehicles&quot;)
+    @Produces(MediaType.APPLICATION_JSON)
+    public List&lt;Vehicle&gt; getVehicles() {
+<span class="nc" id="L68">        return this.vehicles;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

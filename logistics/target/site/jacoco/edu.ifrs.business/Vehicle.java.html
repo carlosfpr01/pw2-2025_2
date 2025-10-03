@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Vehicle.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">logistics</a> &gt; <a href="index.source.html" class="el_package">edu.ifrs.business</a> &gt; <span class="el_source">Vehicle.java</span></div><h1>Vehicle.java</h1><pre class="source lang-java linenums">/**
+ * VVS by Rodrigo Prestes Machado
+ *
+ * VVS is licensed under a
+ * Creative Commons Attribution 4.0 International License.
+ * You should have received a copy of the license along with this
+ * work. If not, see &lt;http://creativecommons.org/licenses/by/4.0/&gt;.
+*/
+package edu.ifrs.business;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Represents a vehicle that can carry loads up to a maximum weight limit.
+ */
+public class Vehicle {
+
+    /**
+     * Represents the maximum weight limit of the vehicle.
+     */
+    private int maximumWeightLimit;
+
+    /**
+     * Represents a vehicle that can transport loads.
+     */
+<span class="fc" id="L27">    private List&lt;Load&gt; loads = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Constructs a new Vehicle object with the specified weight limit.
+     *
+     * @param weightLimit the maximum weight limit of the vehicle
+     */
+<span class="fc" id="L34">    public Vehicle(int weightLimit) {</span>
+<span class="fc" id="L35">        this.maximumWeightLimit = weightLimit;</span>
+<span class="fc" id="L36">    }</span>
+
+    /**
+     * Adds a load to the vehicle.
+     *
+     * @param weight the load to be added
+     */
+    public void addWeight(Load weight) {
+<span class="fc" id="L44">        loads.add(weight);</span>
+<span class="fc" id="L45">    }</span>
+
+    /**
+     * Checks if the total weight of the loads in the vehicle is within the
+     * maximum weight limit.
+     *
+     * @return true if the weight limit is not exceeded, false otherwise
+     */
+    public boolean checkWeightLimit() {
+<span class="fc" id="L54">        int total = 0;</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        for (Load load : loads) {</span>
+<span class="fc" id="L56">            total += load.getWeight();</span>
+<span class="fc" id="L57">        }</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        return total &lt;= maximumWeightLimit;</span>
+    }
+
+    /**
+     * Gets the maximum weight limit of the vehicle.
+     *
+     * @return the maximum weight limit of the vehicle
+     */
+    public int getMaximumWeightLimit() {
+<span class="nc" id="L67">        return maximumWeightLimit;</span>
+    }
+
+    /**
+     * Sets the maximum weight limit of the vehicle.
+     *
+     * @param maximumWeightLimit the maximum weight limit of the vehicle
+     */
+    public void setMaximumWeightLimit(int maximumWeightLimit) {
+<span class="nc" id="L76">        this.maximumWeightLimit = maximumWeightLimit;</span>
+<span class="nc" id="L77">    }</span>
+
+    /**
+     * Gets the list of loads for this vehicle.
+     *
+     * @return the list of loads for this vehicle
+     */
+    public List&lt;Load&gt; getLoads() {
+<span class="nc" id="L85">        return loads;</span>
+    }
+
+    /**
+     * Sets the list of loads for this vehicle.
+     *
+     * @param loads the list of loads to set
+     */
+    public void setLoads(List&lt;Load&gt; loads) {
+<span class="nc" id="L94">        this.loads = loads;</span>
+<span class="nc" id="L95">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

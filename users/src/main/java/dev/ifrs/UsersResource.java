@@ -30,6 +30,5 @@ public class UsersResource {
             .claim(Claims.nickname, user.getName())
             .sign();
     }
-
     
 }
