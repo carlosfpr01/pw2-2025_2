@@ -34,12 +34,9 @@
                 "streetsidesoftware.code-spell-checker-portuguese-brazilian"
             ],
             "settings": {
-                "workbench.colorTheme": "Default Light Modern",
+                "workbench.colorTheme": "Dark Amethyst Theme Light",
                 "workbench.iconTheme": "eq-material-theme-icons-light",
                 "editor.rulers": [80,120],
-                "workbench.colorCustomizations": {
-                    "editorRuler.foreground": "#F3F7FF"
-                },
                 "cSpell.enabled": true,
                 "cSpell.language": "pt_BR, en, pt"
             }
