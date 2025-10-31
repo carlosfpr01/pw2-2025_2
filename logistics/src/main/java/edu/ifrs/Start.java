@@ -29,14 +29,14 @@ public class Start {
      * Inicializes the application with some vehicles and loads.
      */
     public Start() {
-        Vehicle vehicle1 = new Vehicle(200);
+        Vehicle vehicle1 = new Vehicle(200, null);
         Load load1 = new Load(50);
         Load load2 = new Load(50);
         vehicle1.addWeight(load1);
         vehicle1.addWeight(load2);
         this.vehicles.add(vehicle1);
 
-        Vehicle vehicle2 = new Vehicle(400);
+        Vehicle vehicle2 = new Vehicle(400, null);
         Load load3 = new Load(150);
         Load load4 = new Load(200);
         vehicle2.addWeight(load3);

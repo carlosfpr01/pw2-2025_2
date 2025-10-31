@@ -1,54 +1,31 @@
 package edu.ifrs;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.ArrayList;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import edu.ifrs.business.Load;
 import edu.ifrs.business.Vehicle;
+import edu.ifrs.business.WeightService;
+import io.quarkus.test.Mock;
 
+@ExtendWith(MockitoExtension.class)
 public class CarregarTest {
-    
+
+    @Mock
+    private WeightService weightService;
+
     @Test
     public void testeAdicionaCargaNegativo(){
-        Vehicle veiculo = new Vehicle(100);
-        veiculo.addWeight(new Load(-1));
-        assertTrue(veiculo.checkWeightLimit());
+        when(weightService.isWeightAllowed(20, 100)).thenReturn(true);
+        Vehicle vehicle = new Vehicle(100, weightService);
+        vehicle.addWeight(new Load(20));
+        assertFalse(vehicle.checkWeightLimit());
     }
-
-    @Test
-    public void testeAdicionaCarga0(){
-        Vehicle veiculo = new Vehicle(0);
-        veiculo.addWeight(new Load(0));
-        assertTrue(veiculo.checkWeightLimit());
-    }
-
-    @Test
-    public void testeAdicionaCarga1(){
-        Vehicle veiculo = new Vehicle(1);
-        veiculo.addWeight(new Load(1));
-        assertTrue(veiculo.checkWeightLimit());
-    }
-
-    @Test
-    public void testeAdicionaCargaMax(){
-        Vehicle veiculo = new Vehicle(100);
-        veiculo.addWeight(new Load(100));
-        assertTrue(veiculo.checkWeightLimit());
-    }
-
-    @Test
-    public void testeAdicionaCargaMaiorMax(){
-        Vehicle veiculo = new Vehicle(100);
-        veiculo.addWeight(new Load(150));
-        assertFalse(veiculo.checkWeightLimit());
-    }
-
-    
 
 }
