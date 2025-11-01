@@ -15,11 +15,9 @@ public class Vehicle {
 
     private int maximumWeightLimit;
     private List<Load> loads = new ArrayList<>();
-    private WeightService weightService;
 
-    public Vehicle(int weightLimit, WeightService weightService) {
+    public Vehicle(int weightLimit) {
         this.maximumWeightLimit = weightLimit;
-        this.weightService = weightService;
     }
 
     public void addWeight(Load load) {
@@ -29,7 +27,7 @@ public class Vehicle {
     public boolean checkWeightLimit() {
         int total = loads.stream().mapToInt(Load::getWeight).sum();
         // delega a verificação ao serviço externo
-        return weightService.isWeightAllowed(total, maximumWeightLimit);
+        return total <= maximumWeightLimit;
     }
 
     public int getMaximumWeightLimit() {
