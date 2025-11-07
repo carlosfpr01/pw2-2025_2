@@ -35,6 +35,7 @@
 				"cracrayol.java-pmd",
 				"SonarSource.sonarlint-vscode",
 				"streetsidesoftware.code-spell-checker-portuguese-brazilian"
+				, "GabrielBB.vscode-lombok"
 			],
 			"settings": {
 				"workbench.colorTheme": "Default Dark Modern",

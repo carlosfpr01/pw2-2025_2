@@ -2,8 +2,12 @@ package dev.ifrs;
 
 import java.util.List;
 
+import org.eclipse.microprofile.metrics.annotation.Counted;
+
 import dev.ifrs.data.DataBase;
 import dev.ifrs.model.Book;
+import io.quarkus.logging.Log;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -17,12 +21,23 @@ public class BookResource {
     @Inject
     private DataBase dataBase;
 
-
     @GET
     @Path("/list")
-    @RolesAllowed("User")
+    @PermitAll
+    @Counted(displayName = "getBooks")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Book> hello() {
+    public List<Book> getBooks() {
+        Log.info("dataBase");
+        return dataBase.getBooks();
+    }
+
+    @GET
+    @Path("/test")
+    @RolesAllowed("User")
+    @Counted(displayName = "getBooks")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Book> getTestBooks() {
+        Log.info("Fetching test book list for user");
         return dataBase.getBooks();
     }
 }

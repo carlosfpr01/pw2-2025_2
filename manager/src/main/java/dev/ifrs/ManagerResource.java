@@ -6,6 +6,7 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import dev.ifrs.client.BookClient;
 import dev.ifrs.model.Book;
+import io.quarkus.logging.Log;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -26,6 +27,7 @@ public class ManagerResource {
     @RolesAllowed("User")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Book> getBooks() {
+        Log.info("Fetching book list for manager");
         return bookClient.listBooks();
     }
 }

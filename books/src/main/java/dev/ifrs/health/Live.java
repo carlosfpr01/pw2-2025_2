@@ -9,7 +9,7 @@ public class Live implements HealthCheck {
 
     @Override
     public HealthCheckResponse call() {
-        return HealthCheckResponse.up("Eu to vivo");
+       return HealthCheckResponse.up("Estou vivo");
     }
-
+    
 }
