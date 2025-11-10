@@ -27,12 +27,10 @@ public class UsersResource {
     private static final String ISSUER = "users-issuer";
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-    // Método auxiliar para hash de senha
     private String hashPassword(String password) {
         return encoder.encode(password);
     }
 
-    // Método auxiliar para verificar senha
     private boolean verifyPassword(String password, String hash) {
         return encoder.matches(password, hash);
     }
@@ -127,7 +125,7 @@ public class UsersResource {
         public Long id;
         public String name;
         public String email;
-        public String password; // Opcional
+        public String password;
     }
 
     public static class DeleteUserRequest {
