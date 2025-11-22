@@ -15,7 +15,13 @@ public class User extends PanacheEntity {
     private String email;
 
     @Column(nullable = false, length = 255)
-    public String password;
+    private String password;
+
+    @Column(nullable = false, length = 50)
+    private String dataCriacao;
+
+    @Column(nullable = false)
+    public Double balance;
 
 
     // Constructors
@@ -26,6 +32,7 @@ public class User extends PanacheEntity {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.balance = 0.0;
     }
 
     // Getters and Setters
@@ -50,6 +57,27 @@ public class User extends PanacheEntity {
     }
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getDataCriacao() {
+        return dataCriacao;
+    }
+    public void setDataCriacao(String dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
+    public void updateBalance(Double amount) {
+        this.balance += amount;
+    }
+    public void deductBalance(Double amount) {
+        this.balance -= amount;
     }
 
 }
