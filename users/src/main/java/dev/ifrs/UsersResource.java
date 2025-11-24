@@ -59,6 +59,7 @@ public class UsersResource {
                         .claim(Claims.nickname, user.getName())
                         .claim("id", user.id)
                         .claim(Claims.email, user.getEmail())
+                        .expiresIn(3600)  // Token expira em 1 hora (3600 segundos)
                         .sign();
                     return Response.ok(token).build();
                 } else {

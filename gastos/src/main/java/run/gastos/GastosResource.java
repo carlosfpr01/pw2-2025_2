@@ -11,6 +11,7 @@ import run.gastos.model.Despesa;
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -27,14 +28,27 @@ public class GastosResource {
     @Inject
     JsonWebToken jwt;
 
+    @GET
+    @Path("/test-auth")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user"})
+    public Uni<Response> testAuth() {
+        String userId = jwt != null ? jwt.getClaim("id").toString() : "null";
+        String upn = jwt != null ? jwt.getName() : "null";
+        String groups = jwt != null ? jwt.getGroups().toString() : "null";
+        String result = String.format("{\"userId\":\"%s\",\"upn\":\"%s\",\"groups\":\"%s\",\"authenticated\":%b}", 
+            userId, upn, groups, !securityIdentity.isAnonymous());
+        return Uni.createFrom().item(Response.ok(result).build());
+    }
+
     @POST
     @Path("/despesa")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed("user")
+    @RolesAllowed({"user"})
     @WithTransaction
     public Uni<Despesa> createDespesa(CreateDespesaRequest request) {
-        /* Validação do token JWT se o token está nulo
+        // Validação do token JWT se o token está nulo
         if (securityIdentity == null || securityIdentity.isAnonymous() || jwt == null) {
             return Uni.createFrom().failure(new WebApplicationException("Token Vazio", Response.Status.UNAUTHORIZED));
         }
@@ -70,11 +84,10 @@ public class GastosResource {
         if (request.date == null) {
             return Uni.createFrom().failure(new WebApplicationException("Campo 'date' é obrigatório", Response.Status.BAD_REQUEST));
         }
-        */
         Despesa despesa = new Despesa();
-        despesa.setIdUser(request.idUser);
-        despesa.setAmount(request.amount);
-        despesa.setOperation(Despesa.operations.valueOf(request.operation.trim().toUpperCase()));
+        despesa.setIdUser(tokenId);
+        despesa.setAmount(amount);
+        despesa.setOperation(op);
         despesa.setDate(request.date);
         despesa.setTag(request.tag == null || request.tag.trim().isEmpty() ? "Outros" : request.tag);
         return despesa.persistAndFlush();
