@@ -1,8 +1,6 @@
 package dev.ifrs;
 
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.microprofile.jwt.Claims;
@@ -81,8 +79,7 @@ public class UsersResource {
         user.setEmail(request.email);
         user.setPassword(hashPassword(request.password));
         user.setDataCriacao(java.time.LocalDateTime.now().toString());
-        user.setBalance(request.balance);
-        return user.persistAndFlush();
+        return user.persistAndFlush().map(v -> user);
     }
 
     @GET
@@ -133,49 +130,6 @@ public class UsersResource {
     }
 
     @POST
-    @Path("/operationsBalance")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @WithTransaction
-    @RolesAllowed({"user"})
-    public Uni<Response> operationsBalance(UpdateBalanceRequest request) {
-        if (securityIdentity == null || securityIdentity.isAnonymous() || jwt == null) {
-            return Uni.createFrom().item(Response.status(Response.Status.UNAUTHORIZED).entity("Token necessário").build());
-        }
-
-        Object idClaim = jwt.getClaim("id");
-        if (idClaim == null) {
-            return Uni.createFrom().item(Response.status(Response.Status.UNAUTHORIZED).entity("Erro no Token").build());
-        }
-        Long tokenId;
-        if (idClaim instanceof Number) {
-            tokenId = ((Number) idClaim).longValue();
-        } else {
-            try {
-                tokenId = Long.parseLong(idClaim.toString());
-            } catch (NumberFormatException e) {
-                return Uni.createFrom().item(Response.status(Response.Status.BAD_REQUEST).entity("Claim id inválido").build());
-            }
-        }
-
-        return User.<User>findById(tokenId)
-            .onItem().ifNotNull().transformToUni(user -> {
-                if (request.value != null) {
-                    if (request.isAddition != null && request.isAddition == true) {
-                        user.updateBalance(request.value);
-                    } else if (request.isAddition != null && request.isAddition == false) {
-                        user.deductBalance(request.value);
-                    }else {
-                        return Uni.createFrom().item(Response.status(Response.Status.BAD_REQUEST).entity("campo isAddition(é adição) deve ser true ou false").build());
-                    }
-                }
-                return user.persistAndFlush()
-                    .onItem().transform(updated -> Response.ok(updated).build());
-            })
-            .onItem().ifNull().continueWith(Response.status(Response.Status.NOT_FOUND).entity("Usuário não encontrado").build());
-    }
-
-    @POST
     @Path("/delete")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -197,7 +151,6 @@ public class UsersResource {
         public String name;
         public String email;
         public String password;
-        public Double balance;
     }
 
     public static class UpdateUserRequest {
@@ -208,11 +161,6 @@ public class UsersResource {
 
     public static class DeleteUserRequest {
         public Long id;
-    }
-
-    public static class UpdateBalanceRequest {
-        public Double value;
-        public Boolean isAddition;
     }
 
 
