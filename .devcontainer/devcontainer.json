@@ -9,7 +9,9 @@
 		"ghcr.io/devcontainers/features/java:1": {},
 		"ghcr.io/devcontainers/features/node:1": {},
 		"ghcr.io/devcontainers-contrib/features/quarkus-sdkman:2": {},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/devcontainers/features/docker-in-docker": {
+      		"moby": false
+    	},
 		"ghcr.io/devcontainers-contrib/features/maven-sdkman:2": {}
 	},
 
