@@ -1,23 +1,28 @@
 package run.gastos;
 
 import java.time.LocalDate;
-import org.eclipse.microprofile.jwt.Claims;
+import java.util.List;
+
+import javax.annotation.processing.Generated;
+
 import org.eclipse.microprofile.jwt.JsonWebToken;
+
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.quarkus.security.identity.SecurityIdentity;
+import io.smallrye.mutiny.Uni;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
-
-import run.gastos.model.Despesa;
-import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
-import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import run.gastos.model.Despesa;
+import run.gastos.model.TagSum;
 
 @Path("/gastos")
 public class GastosResource {
@@ -93,15 +98,109 @@ public class GastosResource {
         return despesa.persistAndFlush();
     }
 
+    @GET
+    @Path("/despesas")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user"})
+    @WithTransaction
+    public Uni<List<Despesa>> getDespesas(
+            @QueryParam("operation") String operation,
+            @QueryParam("tag") String tag,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+         // Validação do token JWT se o token está nulo
+        if (securityIdentity == null || securityIdentity.isAnonymous() || jwt == null) {
+            return Uni.createFrom().failure(new WebApplicationException("Token Vazio", Response.Status.UNAUTHORIZED));
+        }
+
+        //Validar se o campo id existe no token
+        Object idClaim = jwt.getClaim("id");
+        if (idClaim == null) {
+            return Uni.createFrom().failure(new WebApplicationException("Token inválido", Response.Status.UNAUTHORIZED));
+        }
+        // Criação do id Long baseado no token JWT (forma simples e resiliente)
+        Long tokenId;
+        try {
+            tokenId = Long.parseLong(idClaim.toString());
+        } catch (Exception e) {
+            return Uni.createFrom().failure(new WebApplicationException("Token inválido", Response.Status.BAD_REQUEST));
+        }
+
+        dateStart = (dateStart == null || dateStart.trim().isEmpty()) ? null : dateStart;
+        dateEnd = (dateEnd == null || dateEnd.trim().isEmpty()) ? null : dateEnd;
+
+        return Despesa.getDespesasByFilters(tokenId, operation, tag, dateStart, dateEnd);
+    }
+
+    @GET
+    @Path("/por-tags")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user"})
+    @WithTransaction
+    public Uni<List<TagSum>> getDebitByTags(
+        @QueryParam("tag") String tag,
+        @QueryParam("dateStart") String dtStart,
+        @QueryParam("dateEnd") String dtEnd
+    ) {
+        if (securityIdentity == null || securityIdentity.isAnonymous() || jwt == null) {
+            return Uni.createFrom().failure(new WebApplicationException("Token Vazio", Response.Status.UNAUTHORIZED));
+        }
+
+        //Validar se o campo id existe no token
+        Object idClaim = jwt.getClaim("id");
+        if (idClaim == null) {
+            return Uni.createFrom().failure(new WebApplicationException("Token inválido", Response.Status.UNAUTHORIZED));
+        }
+
+        // Criação do id Long baseado no token JWT (forma simples e resiliente)
+        Long tokenId;
+        try {
+            tokenId = Long.parseLong(idClaim.toString());
+        } catch (Exception e) {
+            return Uni.createFrom().failure(new WebApplicationException("Token inválido", Response.Status.BAD_REQUEST));
+        }
+
+        return TagSum.getTagsByUserId(tokenId, dtStart,  dtEnd);
+
+    }
+
+    @GET
+    @Path("/saldo")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user"})
+    @WithTransaction
+    public Uni<Double> getSaldo() {
+        if (securityIdentity == null || securityIdentity.isAnonymous() || jwt == null) {
+            return Uni.createFrom().failure(new WebApplicationException("Token Vazio", Response.Status.UNAUTHORIZED));
+        }
+
+        //Validar se o campo id existe no token
+        Object idClaim = jwt.getClaim("id");
+        if (idClaim == null) {
+            return Uni.createFrom().failure(new WebApplicationException("Token inválido", Response.Status.UNAUTHORIZED));
+        }
+
+        // Criação do id Long baseado no token JWT (forma simples e resiliente)
+        Long tokenId;
+        try {
+            tokenId = Long.parseLong(idClaim.toString());
+        } catch (Exception e) {
+            return Uni.createFrom().failure(new WebApplicationException("Token inválido", Response.Status.BAD_REQUEST));
+        }
+
+        return Despesa.calculateSaldoByUserId(tokenId);
+    }
+    
+
 
     public static class CreateTagRequest {
         public String idUser;
         public String name;
     }
 
+
     public static class CreateDespesaRequest {
-        public Long idUser;
-        public Number amount;
+        public Double amount;
         public String operation;
         public String tag;
         public LocalDate date;

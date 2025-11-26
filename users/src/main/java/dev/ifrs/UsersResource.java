@@ -83,15 +83,6 @@ public class UsersResource {
         return user.persistAndFlush().map(v -> user);
     }
 
-    @GET
-    @Path("/list")
-    @Produces(MediaType.APPLICATION_JSON)
-    @WithTransaction
-    public Uni<List<User>> listUser() {
-        return User.findAll().list();
-    }
-
-
     @PATCH
     @Path("/updateUser")
     @Consumes(MediaType.APPLICATION_JSON)
