@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import run.gastos.model.Despesa;
-
 public class TagSum {
     private String tag;
     private Double total;

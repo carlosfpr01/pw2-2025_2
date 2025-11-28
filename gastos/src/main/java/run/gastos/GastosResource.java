@@ -3,8 +3,6 @@ package run.gastos;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.annotation.processing.Generated;
-
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
@@ -13,8 +11,10 @@ import io.smallrye.mutiny.Uni;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
@@ -47,7 +47,7 @@ public class GastosResource {
     }
 
     @POST
-    @Path("/despesa")
+    @Path("/despesa/create")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"user"})
@@ -99,7 +99,7 @@ public class GastosResource {
     }
 
     @GET
-    @Path("/despesas")
+    @Path("/despesas/list")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"user"})
     @WithTransaction
@@ -130,6 +130,51 @@ public class GastosResource {
         dateEnd = (dateEnd == null || dateEnd.trim().isEmpty()) ? null : dateEnd;
 
         return Despesa.getDespesasByFilters(tokenId, operation, tag, dateStart, dateEnd);
+    }
+
+    @PATCH
+    @Path("/despesa/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user"})
+    @WithTransaction
+    public Uni<Despesa> updateDespesa(UpdateDespesaRequest request, @QueryParam("id") Long id) {
+        return Despesa.<Despesa>findById(id)
+            .onItem().ifNotNull()
+            .invoke(item -> {
+                if (request.amount != null) {
+                    item.setAmount(request.amount);
+                }
+                if (request.operation != null && !request.operation.trim().isEmpty()) {
+                    try {
+                        Despesa.operations op = Despesa.operations.valueOf(request.operation.trim().toUpperCase());
+                        item.setOperation(op);
+                    } catch (IllegalArgumentException e) {
+                        throw new WebApplicationException("Campo 'operation' inválido (use 'D' ou 'C')", Response.Status.BAD_REQUEST);
+                    }
+                }
+                if (request.tag != null && !request.tag.trim().isEmpty()) {
+                    item.setTag(request.tag);
+                }
+                if (request.date != null) {
+                    item.setDate(request.date);
+                }
+            })
+            .call(item -> item.persistAndFlush());
+
+    }
+
+    @DELETE
+    @Path("/despesa/delete")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user"})
+    @WithTransaction
+    public Uni<Despesa> deleteDespesa(@QueryParam("id") Long id) {
+        return Despesa.<Despesa>findById(id)
+            .onItem().ifNotNull()
+            .call(item -> {
+                return item.delete();
+            });
     }
 
     @GET
@@ -190,20 +235,22 @@ public class GastosResource {
 
         return Despesa.calculateSaldoByUserId(tokenId);
     }
-    
 
-
-    public static class CreateTagRequest {
-        public String idUser;
-        public String name;
+    public static class UpdateDespesaRequest {
+        public Double amount;
+        public String operation;
+        public String tag;
+        public LocalDate date;
     }
-
 
     public static class CreateDespesaRequest {
         public Double amount;
         public String operation;
         public String tag;
         public LocalDate date;
+    }
+    public static class DeleteDespesaRequest {
+        public Long id;
     }
 
 }
